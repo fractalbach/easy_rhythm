@@ -16,12 +16,10 @@ script = ExtResource( 4 )
 [node name="note_path" type="Node2D" parent="."]
 
 [node name="Line2D" type="Line2D" parent="."]
-position = Vector2( 500, 500 )
-points = PoolVector2Array( -550, 0, 550, 0 )
+points = PoolVector2Array( 0, 500, 1024, 500 )
 default_color = Color( 0.207843, 0.737255, 0.968627, 1 )
 
 [node name="piano_bar" type="Node2D" parent="."]
-position = Vector2( 0, 500 )
 
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
@@ -38,24 +36,37 @@ __meta__ = {
 }
 
 [node name="Scores" type="HBoxContainer" parent="Control/MarginContainer"]
-margin_right = 675.0
+margin_right = 1075.0
 margin_bottom = 67.0
 
+[node name="Label_perfect" type="Label" parent="Control/MarginContainer/Scores"]
+margin_right = 192.0
+margin_bottom = 67.0
+text = "Perfect: "
+
+[node name="Label_perfect_count2" type="Label" parent="Control/MarginContainer/Scores"]
+margin_left = 196.0
+margin_right = 396.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 200, 0 )
+text = "0"
+
 [node name="Label_good" type="Label" parent="Control/MarginContainer/Scores"]
-margin_right = 148.0
+margin_left = 400.0
+margin_right = 548.0
 margin_bottom = 67.0
 text = "Good: "
 
 [node name="Label_good_count" type="Label" parent="Control/MarginContainer/Scores"]
-margin_left = 152.0
-margin_right = 352.0
+margin_left = 552.0
+margin_right = 752.0
 margin_bottom = 67.0
 rect_min_size = Vector2( 200, 0 )
 text = "0"
 
 [node name="Label_bad" type="Label" parent="Control/MarginContainer/Scores"]
-margin_left = 356.0
-margin_right = 471.0
+margin_left = 756.0
+margin_right = 871.0
 margin_bottom = 67.0
 text = "Bad: "
 __meta__ = {
@@ -63,8 +74,8 @@ __meta__ = {
 }
 
 [node name="Label_bad_count" type="Label" parent="Control/MarginContainer/Scores"]
-margin_left = 475.0
-margin_right = 675.0
+margin_left = 875.0
+margin_right = 1075.0
 margin_bottom = 67.0
 rect_min_size = Vector2( 200, 0 )
 text = "0"
