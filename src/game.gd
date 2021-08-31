@@ -1,5 +1,10 @@
 extends Node2D
 
+onready var counter_time    = $Control/Info/Values/Counter_Time
+onready var counter_perfect = $Control/Info/Values/Counter_Perfect
+onready var counter_good    = $Control/Info/Values/Counter_Good
+onready var counter_bad     = $Control/Info/Values/Counter_Bad
+
 var PianoKey = load("res://PianoKey/PianoKey.tscn")
 var Note = load("res://Note/Note.tscn")
 var rng = RandomNumberGenerator.new()
@@ -25,11 +30,13 @@ func determine_position(note_index):
 var note_counter = 101
 var next_end_count = 100
 
+
+
 func _physics_process(_delta: float) -> void:
 	note_counter += 1
 	if note_counter > next_end_count:
 		note_counter = 0
-		next_end_count = rng.randi_range(10, 100)
+		next_end_count = rng.randi_range(10, 80)
 		var r = rng.randi_range(0, 7)
 		var node = Note.instance()
 		$note_path.add_child(node)
@@ -43,16 +50,20 @@ func _on_note_hit(note_type: int):
 
 func _on_good_hit():
 	good_hits += 1
-	$Control/MarginContainer/Scores/Label_good_count.text = str(good_hits)
+	counter_good.text = str(good_hits)
 	
 func _on_bad_hit():
 	bad_hits += 1
-	$Control/MarginContainer/Scores/Label_bad_count.text = str(bad_hits)
+	counter_bad.text = str(bad_hits)
 
 func _on_perfect_hit():
 	perfect_hits += 1 
-	$Control/MarginContainer/Scores/Label_perfect_count2.text = str(perfect_hits)
+	counter_perfect.text = str(perfect_hits)
 
-#func _input(event: InputEvent) -> void:
-#	if event.is_action_pressed("quit_game"):
-#		get_tree().quit()
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("quit_game"):
+		get_tree().quit()
+
+
+func _process(delta: float) -> void:
+	pass
