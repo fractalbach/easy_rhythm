@@ -1,5 +1,6 @@
 extends Node2D
 
+onready var start_time = OS.get_ticks_msec()
 onready var counter_time    = $Control/Info/Values/Counter_Time
 onready var counter_perfect = $Control/Info/Values/Counter_Perfect
 onready var counter_good    = $Control/Info/Values/Counter_Good
@@ -27,10 +28,20 @@ func determine_position(note_index):
 	return 100 + (100 * note_index) + (0 if note_index < 4 else 100)
 
 
+
+# warning-ignore:unused_argument
+func _process(delta: float) -> void:
+	var milliseconds = OS.get_ticks_msec() - start_time
+	var seconds = milliseconds / 1000
+	var minutes = seconds / 60
+	seconds = seconds - minutes*60
+	# milliseconds = milliseconds - seconds*1000 - minutes*60000
+	# counter_time.text = "%02d : %02d : %03d" % [minutes, seconds, milliseconds]
+	counter_time.text = "%02d : %02d" % [minutes, seconds]
+
+
 var note_counter = 101
 var next_end_count = 100
-
-
 
 func _physics_process(_delta: float) -> void:
 	note_counter += 1
@@ -65,5 +76,3 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 
 
-func _process(delta: float) -> void:
-	pass

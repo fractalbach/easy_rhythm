@@ -8,6 +8,7 @@ const GOOD_HIT = 1
 const PERFECT_HIT = 2
 
 var action_name = ""
+onready var player = get_tree().get_root().get_node("game/MyAudioGen")
 
 
 func set_action_name(name):
@@ -23,8 +24,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(action_name):
 		handle_note_hit()
+		player.enable(int(action_name.right(1)))
 	elif event.is_action_released(action_name):
 		play("default")
+		player.disable()
 
 
 func handle_note_hit() -> void:
