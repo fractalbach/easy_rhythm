@@ -1,7 +1,7 @@
 import argparse
 import pathlib
 import sys
-from mido import MidiFile, messages
+from mido import MidiFile
 
 HELP_MAIN = 'Convert MIDI file into a useful format for EasyRhythm game.'
 HELP_FILEPATH = 'filepath of the midi file to convert'
