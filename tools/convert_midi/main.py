@@ -52,7 +52,31 @@ class Converter():
 
 	def display(self):
 		pprint(self.note_counter)
-		
+
+
+
+def note_num_to_game_key(note):
+	"""Converts MIDI note number into a number between 0 and 7,
+	which corresponds to the key that will be used in the game."""
+	d, m = divmod(note, 12)
+
+	# Special case for C and C#.
+	# They split between key 0 and 7 based on octave.
+	if m < 2:
+		if d < 7:
+			return 0
+		else:
+			return 7
+
+	# Remaining cases are more simply determined.
+	elif m < 3:  return 1 # D
+	elif m < 5:  return 2 # Eb and E
+	elif m < 7:  return 3 # F and F#
+	elif m < 9:  return 4 # G and G#
+	elif m < 11: return 5 # A and A#
+	elif m < 12: return 6 # B
+	return -1 # Error case.
+
 
 if __name__ == '__main__':
 	main()
