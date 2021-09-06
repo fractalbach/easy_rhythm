@@ -2,7 +2,7 @@ import argparse
 import pathlib
 import sys
 from pprint import pprint
-from mido import MidiFile
+from mido import MidiFile, tick2second
 
 
 HELP_MAIN = 'Convert MIDI file into a useful format for EasyRhythm game.'
@@ -24,23 +24,31 @@ def main():
 class Converter():
 	def __init__(self, filepath):
 		self.note_counter = {}
+		self.tempo = 500000
 		self.time = 0
 		self.output = ''
-		midi = MidiFile(filepath)
-		for track in midi.tracks:
+		self.midi = MidiFile(filepath)
+		self.previous_output_line = ''
+		for track in self.midi.tracks:
 			for message in track:
 				self.handle_message(message)
 
 
 	def handle_message(self, message):
-		if message.is_meta:
-			print(message)
+		new_time = self.time + message.time
+		time_sec = tick2second(new_time, self.midi.ticks_per_beat, self.tempo)
+		if message.is_meta and message.type == 'set_tempo':
+			self.tempo = message.tempo
+			print(f'tempo changed to {self.tempo}')
 		if not message.is_meta:
-			if message.type =='note_on' or message.type == 'note_off':
-				mtype = message.type[5:].upper()
-				self.output += f'{self.time:6d} : {mtype:3s} : {message.note}'
-				self.count_note(message.note)
-		self.time += message.time
+			if message.type =='note_on':
+				game_key = note_num_to_game_key(message.note)
+				new_output = f'{time_sec:.3f}, {game_key}\n'
+				if new_output != self.previous_output_line:
+					self.output += new_output
+				self.previous_output_line = new_output
+				self.count_note(game_key)
+		self.time = new_time
 
 
 	def count_note(self, note):
@@ -52,6 +60,8 @@ class Converter():
 
 	def display(self):
 		pprint(self.note_counter)
+		# pprint(self.midi.tracks[1])
+		print(self.output)
 
 
 
