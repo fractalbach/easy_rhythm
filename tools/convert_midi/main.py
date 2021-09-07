@@ -39,11 +39,10 @@ class Converter():
 		time_sec = tick2second(new_time, self.midi.ticks_per_beat, self.tempo)
 		if message.is_meta and message.type == 'set_tempo':
 			self.tempo = message.tempo
-			print(f'tempo changed to {self.tempo}')
 		if not message.is_meta:
 			if message.type =='note_on':
 				game_key = note_num_to_game_key(message.note)
-				new_output = f'{time_sec:.3f}, {game_key}\n'
+				new_output = f'{time_sec:.3f},{game_key}\n'
 				if new_output != self.previous_output_line:
 					self.output += new_output
 				self.previous_output_line = new_output
@@ -59,7 +58,7 @@ class Converter():
 
 
 	def display(self):
-		pprint(self.note_counter)
+		# pprint(self.note_counter)
 		# pprint(self.midi.tracks[1])
 		print(self.output)
 
