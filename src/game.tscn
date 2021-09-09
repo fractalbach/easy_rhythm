@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://fonts/OpenSans-Semibold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://MyAudioGen.gd" type="Script" id=2]
+[ext_resource path="res://SongLoader.gd" type="Script" id=3]
 [ext_resource path="res://game.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
@@ -16,6 +17,9 @@ buffer_length = 0.2
 
 [node name="game" type="Node2D"]
 script = ExtResource( 4 )
+
+[node name="SongLoader" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [node name="note_path" type="Node2D" parent="."]
 

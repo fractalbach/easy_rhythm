@@ -5,6 +5,7 @@ onready var counter_time    = $Control/Info/Values/Counter_Time
 onready var counter_perfect = $Control/Info/Values/Counter_Perfect
 onready var counter_good    = $Control/Info/Values/Counter_Good
 onready var counter_bad     = $Control/Info/Values/Counter_Bad
+onready var song_loader = $SongLoader
 
 var PianoKey = load("res://PianoKey/PianoKey.tscn")
 var Note = load("res://Note/Note.tscn")
@@ -12,7 +13,7 @@ var rng = RandomNumberGenerator.new()
 var perfect_hits = 0
 var good_hits = 0
 var bad_hits = 0
-
+var bad_apple_index = 0
 
 func _ready():
 	rng.randomize()
@@ -23,35 +24,33 @@ func _ready():
 		node.position = Vector2(determine_position(i), 500)
 		$piano_bar.add_child(node)
 
-
 func determine_position(note_index):
 	return 100 + (100 * note_index) + (0 if note_index < 4 else 100)
 
 
 
-# warning-ignore:unused_argument
-func _process(delta: float) -> void:
+
+
+func _process(_delta: float) -> void:
 	var milliseconds = OS.get_ticks_msec() - start_time
 	var seconds = milliseconds / 1000
 	var minutes = seconds / 60
 	seconds = seconds - minutes*60
-	# milliseconds = milliseconds - seconds*1000 - minutes*60000
-	# counter_time.text = "%02d : %02d : %03d" % [minutes, seconds, milliseconds]
 	counter_time.text = "%02d : %02d" % [minutes, seconds]
+	generate_bad_apple_note(float(milliseconds) / 1000.0 / 5.0)
 
 
-var note_counter = 101
-var next_end_count = 100
+func generate_bad_apple_note(current_seconds:float) -> void:
+	if len(song_loader.data) <= bad_apple_index:
+		return
+	var entry = song_loader.data[bad_apple_index]
+	if current_seconds >= entry[0]:
+		create_note_on_track(entry[1])
+		bad_apple_index += 1
+		if bad_apple_index % 100 == 0:
+			print("bad_apple: ", bad_apple_index)
 
-func _physics_process(_delta: float) -> void:
-	note_counter += 1
-	if note_counter > next_end_count:
-		note_counter = 0
-		next_end_count = rng.randi_range(10, 80)
-		var r = rng.randi_range(0, 7)
-		var node = Note.instance()
-		$note_path.add_child(node)
-		node.position.x = determine_position(r)
+
 
 func _on_note_hit(note_type: int):
 	match note_type:
@@ -76,3 +75,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 
 
+# Random Note Generator:
+
+var note_counter = 101
+var next_end_count = 100
+
+func generate_random_note() -> void:
+	note_counter += 1
+	if note_counter > next_end_count:
+		note_counter = 0
+		next_end_count = rng.randi_range(10, 80)
+		var r = rng.randi_range(0, 7)
+		create_note_on_track(r)
+
+func create_note_on_track(track_num:int) -> void:
+	var note = Note.instance()
+	$note_path.add_child(note)
+	note.position.x = determine_position(track_num)
+	note.position.y = -100

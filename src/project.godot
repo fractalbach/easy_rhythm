@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "HitText",
+"language": "GDScript",
+"path": "res://HitText/HitText.gd"
+}, {
 "base": "AnimatedSprite",
 "class": "Note",
 "language": "GDScript",
@@ -18,10 +23,23 @@ _global_script_classes=[ {
 "class": "PianoKey",
 "language": "GDScript",
 "path": "res://PianoKey/PianoKey.gd"
+}, {
+"base": "Node",
+"class": "SongLoader",
+"language": "GDScript",
+"path": "res://SongLoader.gd"
+}, {
+"base": "Resource",
+"class": "bad_apple_data",
+"language": "GDScript",
+"path": "res://songs/bad_apple/bad_apple_data.gd"
 } ]
 _global_script_class_icons={
+"HitText": "",
 "Note": "",
-"PianoKey": ""
+"PianoKey": "",
+"SongLoader": "",
+"bad_apple_data": ""
 }
 
 [application]
