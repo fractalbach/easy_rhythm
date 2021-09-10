@@ -13,12 +13,13 @@ var HitText = load("res://HitText/HitText.tscn")
 var action_name = ""
 
 
-func set_action_name(name):
-	action_name = name
-
-
 func _ready():
 	sprite.play("default")
+	sprite.connect("animation_finished", self, "_on_animation_finished")
+
+
+func set_action_name(name):
+	action_name = name
 
 
 func _input(event: InputEvent) -> void:
@@ -26,8 +27,6 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(action_name):
 		handle_note_hit()
-	elif event.is_action_released(action_name):
-		handle_note_release()
 
 
 func handle_note_release() -> void:
@@ -35,6 +34,7 @@ func handle_note_release() -> void:
 
 
 func handle_note_hit() -> void:
+	sprite.stop()
 	var areas = area2d.get_overlapping_areas()
 	if len(areas) > 0:
 		var area = areas[0]
@@ -67,3 +67,6 @@ func generate_hit_text(text:String, hit_type:int) -> void:
 	add_child(h)
 	h.run()
 
+
+func _on_animation_finished() -> void:
+	sprite.play("default")

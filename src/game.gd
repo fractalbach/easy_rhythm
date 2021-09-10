@@ -1,30 +1,32 @@
 extends Node2D
 
-onready var start_time = OS.get_ticks_msec()
-onready var counter_time    = $Control/Info/Values/Counter_Time
-onready var counter_perfect = $Control/Info/Values/Counter_Perfect
-onready var counter_good    = $Control/Info/Values/Counter_Good
-onready var counter_bad     = $Control/Info/Values/Counter_Bad
-onready var song_loader = $SongLoader
+onready var counter_time: Label    = $Control/Info/Values/Counter_Time
+onready var counter_perfect: Label = $Control/Info/Values/Counter_Perfect
+onready var counter_good: Label    = $Control/Info/Values/Counter_Good
+onready var counter_bad: Label     = $Control/Info/Values/Counter_Bad
+onready var song_loader: SongLoader = $SongLoader
+onready var piano_bar: Node = $piano_bar
+onready var note_path: Node = $note_path
 
-var PianoKey = load("res://PianoKey/PianoKey.tscn")
-var Note = load("res://Note/Note.tscn")
-var rng = RandomNumberGenerator.new()
-var perfect_hits = 0
-var good_hits = 0
-var bad_hits = 0
-var bad_apple_index = 0
+var PianoKey: Resource = load("res://PianoKey/PianoKey.tscn")
+var Note: Resource = load("res://Note/Note.tscn")
+var start_time: int = OS.get_ticks_msec()
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var perfect_hits: int = 0
+var good_hits: int = 0
+var bad_hits: int = 0
+var bad_apple_index: int = 0
 
-func _ready():
+func _ready() -> void:
 	rng.randomize()
 	for i in range(8):
-		var node = PianoKey.instance()
+		var node:PianoKey = PianoKey.instance()
 		node.set_action_name("play_note" + str(i+1))
 		node.connect("note_hit", self, "_on_note_hit")
 		node.position = Vector2(determine_position(i), 500)
-		$piano_bar.add_child(node)
+		piano_bar.add_child(node)
 
-func determine_position(note_index):
+func determine_position(note_index:int) -> int:
 	return 100 + (100 * note_index) + (0 if note_index < 4 else 100)
 
 
@@ -70,20 +72,17 @@ func _on_perfect_hit():
 	perfect_hits += 1 
 	counter_perfect.text = str(perfect_hits)
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("quit_game"):
 		get_tree().quit()
-	if (event is InputEventMouseButton):
+	if (event is InputEventMouseButton) or (event is InputEventScreenTouch):
 		var k:int = floor((event.position.x - 50) / 100)
 		var n:int = -1
 		match k:
 			0,1,2,3: n = k
 			5,6,7,8: n = k - 1
 			_:       return
-		if event.is_pressed():
-			$piano_bar.get_children()[n].handle_note_hit()
-		else:
-			$piano_bar.get_children()[n].handle_note_release()
+		piano_bar.get_children()[n].handle_note_hit()
 
 
 func mouse_position_to_piano_key_index(mousex:int) -> int:
