@@ -1,15 +1,16 @@
 class_name PianoKey
-extends AnimatedSprite
+extends Node2D
 
 signal note_hit(type_of_hit)
 
 const BAD_HIT = 0
 const GOOD_HIT = 1
 const PERFECT_HIT = 2
-
-var action_name = ""
-var HitText = load("res://HitText/HitText.tscn")
 onready var player = get_tree().get_root().get_node("game/MyAudioGen")
+onready var sprite = $AnimatedSprite
+onready var area2d = $AnimatedSprite/Area2D
+var HitText = load("res://HitText/HitText.tscn")
+var action_name = ""
 
 
 func set_action_name(name):
@@ -17,7 +18,7 @@ func set_action_name(name):
 
 
 func _ready():
-	play("default")
+	sprite.play("default")
 
 
 func _input(event: InputEvent) -> void:
@@ -25,14 +26,16 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(action_name):
 		handle_note_hit()
-		# player.enable(int(action_name.right(1)))
 	elif event.is_action_released(action_name):
-		play("default")
-		# player.disable()
+		handle_note_release()
+
+
+func handle_note_release() -> void:
+	sprite.play("default")
 
 
 func handle_note_hit() -> void:
-	var areas = $Area2D.get_overlapping_areas()
+	var areas = area2d.get_overlapping_areas()
 	if len(areas) > 0:
 		var area = areas[0]
 		var dist = abs(round(area.owner.position.y - position.y))
@@ -43,13 +46,13 @@ func handle_note_hit() -> void:
 			consume_note(area, GOOD_HIT)
 			generate_hit_text("Good", GOOD_HIT)
 		return
-	play("miss")
+	sprite.play("miss")
 	emit_signal("note_hit", BAD_HIT)
 	generate_hit_text("WTF", BAD_HIT)
 
 
-func consume_note(area, hit_type):
-	play("hit")
+func consume_note(area:Area2D, hit_type:int) -> void:
+	sprite.play("hit")
 	emit_signal("note_hit", hit_type)
 	area.owner.queue_free()
 

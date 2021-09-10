@@ -18,16 +18,86 @@ buffer_length = 0.2
 [node name="game" type="Node2D"]
 script = ExtResource( 4 )
 
-[node name="SongLoader" type="Node" parent="."]
-script = ExtResource( 3 )
+[node name="backgrounds" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect1" type="ColorRect" parent="backgrounds"]
+margin_left = 50.0
+margin_right = 150.0
+margin_bottom = 600.0
+color = Color( 0.486275, 0.486275, 0.486275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="backgrounds"]
+margin_left = 150.0
+margin_right = 250.0
+margin_bottom = 600.0
+color = Color( 0.380392, 0.380392, 0.380392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect3" type="ColorRect" parent="backgrounds"]
+margin_left = 250.0
+margin_right = 350.0
+margin_bottom = 600.0
+color = Color( 0.486275, 0.486275, 0.486275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect4" type="ColorRect" parent="backgrounds"]
+margin_left = 350.0
+margin_right = 450.0
+margin_bottom = 600.0
+color = Color( 0.380392, 0.380392, 0.380392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect5" type="ColorRect" parent="backgrounds"]
+margin_left = 550.0
+margin_right = 650.0
+margin_bottom = 600.0
+color = Color( 0.486275, 0.486275, 0.486275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect6" type="ColorRect" parent="backgrounds"]
+margin_left = 650.0
+margin_right = 750.0
+margin_bottom = 600.0
+color = Color( 0.380392, 0.380392, 0.380392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect7" type="ColorRect" parent="backgrounds"]
+margin_left = 750.0
+margin_right = 850.0
+margin_bottom = 600.0
+color = Color( 0.486275, 0.486275, 0.486275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect8" type="ColorRect" parent="backgrounds"]
+margin_left = 850.0
+margin_right = 950.0
+margin_bottom = 600.0
+color = Color( 0.380392, 0.380392, 0.380392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="note_path" type="Node2D" parent="."]
-
-[node name="Line2D" type="Line2D" parent="."]
-points = PoolVector2Array( 0, 500, 1024, 500 )
-default_color = Color( 0.207843, 0.737255, 0.968627, 1 )
-
-[node name="piano_bar" type="Node2D" parent="."]
 
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
@@ -117,6 +187,15 @@ margin_bottom = 186.0
 margin_left = 245.0
 margin_right = 245.0
 margin_bottom = 186.0
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PoolVector2Array( 0, 500, 1024, 500 )
+default_color = Color( 0.207843, 0.737255, 0.968627, 1 )
+
+[node name="piano_bar" type="Node2D" parent="."]
+
+[node name="SongLoader" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [node name="MyAudioGen" type="Node" parent="."]
 script = ExtResource( 2 )

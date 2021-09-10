@@ -18,26 +18,28 @@ animations = [ {
 "name": "on",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 4 ) ],
-"loop": true,
-"name": "hit",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 5 ) ],
 "loop": true,
 "name": "miss",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "hit",
 "speed": 5.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 40, 10 )
 
-[node name="PianoKey" type="AnimatedSprite"]
-frames = SubResource( 1 )
-animation = "miss"
+[node name="PianoKey" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "miss"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="Area2D" type="Area2D" parent="AnimatedSprite"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite/Area2D"]
 shape = SubResource( 2 )

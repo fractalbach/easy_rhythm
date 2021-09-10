@@ -70,10 +70,24 @@ func _on_perfect_hit():
 	perfect_hits += 1 
 	counter_perfect.text = str(perfect_hits)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("quit_game"):
 		get_tree().quit()
+	if (event is InputEventMouseButton):
+		var k:int = floor((event.position.x - 50) / 100)
+		var n:int = -1
+		match k:
+			0,1,2,3: n = k
+			5,6,7,8: n = k - 1
+			_:       return
+		if event.is_pressed():
+			$piano_bar.get_children()[n].handle_note_hit()
+		else:
+			$piano_bar.get_children()[n].handle_note_release()
 
+
+func mouse_position_to_piano_key_index(mousex:int) -> int:
+	return 0
 
 # Random Note Generator:
 
