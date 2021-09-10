@@ -75,7 +75,10 @@ func _on_perfect_hit():
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("quit_game"):
 		get_tree().quit()
-	if (event is InputEventMouseButton) or (event is InputEventScreenTouch):
+	if (
+		((event is InputEventScreenTouch) or (event is InputEventMouseButton))
+		and event.is_pressed()
+	):
 		var k:int = floor((event.position.x - 50) / 100)
 		var n:int = -1
 		match k:
