@@ -16,6 +16,7 @@ var perfect_hits: int = 0
 var good_hits: int = 0
 var bad_hits: int = 0
 var bad_apple_index: int = 0
+var music_has_started: bool = false
 
 func _ready() -> void:
 	rng.randomize()
@@ -25,6 +26,7 @@ func _ready() -> void:
 		node.connect("note_hit", self, "_on_note_hit")
 		node.position = Vector2(determine_position(i), 500)
 		piano_bar.add_child(node)
+
 
 func determine_position(note_index:int) -> int:
 	return 100 + (100 * note_index) + (0 if note_index < 4 else 100)
@@ -39,7 +41,7 @@ func _process(_delta: float) -> void:
 	var minutes = seconds / 60
 	seconds = seconds - minutes*60
 	counter_time.text = "%02d : %02d" % [minutes, seconds]
-	generate_bad_apple_note(float(milliseconds) / 1000.0 / 5.0)
+	generate_bad_apple_note(float(milliseconds) / 1000.0 - 28)
 
 
 func generate_bad_apple_note(current_seconds:float) -> void:
@@ -106,6 +108,6 @@ func generate_random_note() -> void:
 
 func create_note_on_track(track_num:int) -> void:
 	var note = Note.instance()
-	$note_path.add_child(note)
 	note.position.x = determine_position(track_num)
 	note.position.y = -100
+	note_path.add_child(note)
