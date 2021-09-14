@@ -10,7 +10,8 @@ onready var note_path: Node = $note_path
 
 var PianoKey: Resource = load("res://PianoKey/PianoKey.tscn")
 var Note: Resource = load("res://Note/Note.tscn")
-var start_time: int = OS.get_ticks_msec()
+var start_time: int
+var time_delay: int
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var perfect_hits: int = 0
 var good_hits: int = 0
@@ -26,6 +27,8 @@ func _ready() -> void:
 		node.connect("note_hit", self, "_on_note_hit")
 		node.position = Vector2(determine_position(i), 500)
 		piano_bar.add_child(node)
+	time_delay = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
+	start_time = OS.get_ticks_msec()
 
 
 func determine_position(note_index:int) -> int:
@@ -36,12 +39,15 @@ func determine_position(note_index:int) -> int:
 
 
 func _process(_delta: float) -> void:
-	var milliseconds = OS.get_ticks_msec() - start_time
+	var milliseconds = OS.get_ticks_msec() - start_time - time_delay
 	var seconds = milliseconds / 1000
 	var minutes = seconds / 60
 	seconds = seconds - minutes*60
 	counter_time.text = "%02d : %02d" % [minutes, seconds]
-	generate_bad_apple_note(float(milliseconds) / 1000.0 - 28)
+	generate_bad_apple_note(float(milliseconds) / 1000.0)
+	if (not music_has_started) and ((milliseconds) >= 1500):
+		$VideoPlayer.paused = false
+		music_has_started = true
 
 
 func generate_bad_apple_note(current_seconds:float) -> void:
@@ -49,7 +55,8 @@ func generate_bad_apple_note(current_seconds:float) -> void:
 		return
 	var entry = song_loader.data[bad_apple_index]
 	if current_seconds >= entry[0]:
-		create_note_on_track(entry[1])
+		var offset_time = current_seconds - entry[0]
+		create_note_on_track(entry[1], offset_time)
 		bad_apple_index += 1
 		if bad_apple_index % 100 == 0:
 			print("bad_apple: ", bad_apple_index)
@@ -93,21 +100,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func mouse_position_to_piano_key_index(mousex:int) -> int:
 	return 0
 
-# Random Note Generator:
 
-var note_counter = 101
-var next_end_count = 100
-
-func generate_random_note() -> void:
-	note_counter += 1
-	if note_counter > next_end_count:
-		note_counter = 0
-		next_end_count = rng.randi_range(10, 80)
-		var r = rng.randi_range(0, 7)
-		create_note_on_track(r)
-
-func create_note_on_track(track_num:int) -> void:
+func create_note_on_track(track_num:int, offset_time:float) -> void:
 	var note = Note.instance()
 	note.position.x = determine_position(track_num)
-	note.position.y = -100
+	note.position.y = (500 - 2*Global.NOTE_SPEED) - (offset_time*Global.NOTE_SPEED)
 	note_path.add_child(note)
