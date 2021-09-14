@@ -10,9 +10,10 @@ onready var note_path: Node = $note_path
 
 var PianoKey: Resource = load("res://PianoKey/PianoKey.tscn")
 var Note: Resource = load("res://Note/Note.tscn")
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
 var start_time: int
 var time_delay: int
-var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var perfect_hits: int = 0
 var good_hits: int = 0
 var bad_hits: int = 0
@@ -27,27 +28,30 @@ func _ready() -> void:
 		node.connect("note_hit", self, "_on_note_hit")
 		node.position = Vector2(determine_position(i), 500)
 		piano_bar.add_child(node)
-	time_delay = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
 	start_time = OS.get_ticks_msec()
+	time_delay = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
+	$VideoPlayer.play()
 
 
 func determine_position(note_index:int) -> int:
 	return 100 + (100 * note_index) + (0 if note_index < 4 else 100)
 
 
-
-
+var note_time:float
 
 func _process(_delta: float) -> void:
-	var milliseconds = OS.get_ticks_msec() - start_time - time_delay
-	var seconds = milliseconds / 1000
-	var minutes = seconds / 60
-	seconds = seconds - minutes*60
+	var milliseconds:float = OS.get_ticks_msec() - start_time - time_delay
+	var seconds:int = int(milliseconds / 1000) % 60
+	var minutes:int = int(milliseconds / 60000)
 	counter_time.text = "%02d : %02d" % [minutes, seconds]
-	generate_bad_apple_note(float(milliseconds) / 1000.0)
-	if (not music_has_started) and ((milliseconds) >= 1500):
-		$VideoPlayer.paused = false
-		music_has_started = true
+	
+	var note_time:float = (milliseconds + Global.VIDEO_DELAY) / 1000
+	generate_bad_apple_note(note_time)
+	
+	# if (not music_has_started) and ((milliseconds) >= 1500):
+#	if (not music_has_started) and ((OS.get_ticks_msec() - start_time) >= Global.VIDEO_DELAY):
+#		$VideoPlayer.play()
+#		music_has_started = true
 
 
 func generate_bad_apple_note(current_seconds:float) -> void:
@@ -61,6 +65,12 @@ func generate_bad_apple_note(current_seconds:float) -> void:
 		if bad_apple_index % 100 == 0:
 			print("bad_apple: ", bad_apple_index)
 
+
+func create_note_on_track(track_num:int, offset_time:float) -> void:
+	var note = Note.instance()
+	note.position.x = determine_position(track_num)
+	note.position.y = (Global.NOTE_SPAWN_Y) + (offset_time*Global.NOTE_SPEED)
+	note_path.add_child(note)
 
 
 func _on_note_hit(note_type: int):
@@ -99,10 +109,3 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func mouse_position_to_piano_key_index(mousex:int) -> int:
 	return 0
-
-
-func create_note_on_track(track_num:int, offset_time:float) -> void:
-	var note = Note.instance()
-	note.position.x = determine_position(track_num)
-	note.position.y = (500 - 2*Global.NOTE_SPEED) - (offset_time*Global.NOTE_SPEED)
-	note_path.add_child(note)
