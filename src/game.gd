@@ -30,7 +30,7 @@ func _ready() -> void:
 		piano_bar.add_child(node)
 	start_time = OS.get_ticks_msec()
 	time_delay = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
-	$VideoPlayer.play()
+#	$VideoPlayer.play()
 
 
 func determine_position(note_index:int) -> int:
@@ -45,13 +45,13 @@ func _process(_delta: float) -> void:
 	var minutes:int = int(milliseconds / 60000)
 	counter_time.text = "%02d : %02d" % [minutes, seconds]
 	
-	var note_time:float = (milliseconds + Global.VIDEO_DELAY) / 1000
+	var note_time:float = (milliseconds) / 1000
 	generate_bad_apple_note(note_time)
 	
 	# if (not music_has_started) and ((milliseconds) >= 1500):
-#	if (not music_has_started) and ((OS.get_ticks_msec() - start_time) >= Global.VIDEO_DELAY):
-#		$VideoPlayer.play()
-#		music_has_started = true
+	if (not music_has_started) and ((OS.get_ticks_msec() - start_time) >= Global.VIDEO_DELAY):
+		$VideoPlayer.play()
+		music_has_started = true
 
 
 func generate_bad_apple_note(current_seconds:float) -> void:
