@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://PianoKey/piano_empty.png" type="Texture" id=1]
-[ext_resource path="res://PianoKey/piano_blue.png" type="Texture" id=2]
+[ext_resource path="res://PianoKey/piano_empty_bar.png" type="Texture" id=1]
+[ext_resource path="res://PianoKey/piano_green_bar.png" type="Texture" id=2]
 [ext_resource path="res://PianoKey/PianoKey.gd" type="Script" id=3]
-[ext_resource path="res://PianoKey/piano_hit.png" type="Texture" id=4]
-[ext_resource path="res://PianoKey/piano_miss.png" type="Texture" id=5]
+[ext_resource path="res://PianoKey/piano_red_bar.png" type="Texture" id=4]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -13,17 +12,12 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
-"loop": false,
-"name": "on",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ) ],
+"frames": [ ExtResource( 4 ) ],
 "loop": false,
 "name": "miss",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 4 ) ],
+"frames": [ ExtResource( 2 ) ],
 "loop": false,
 "name": "hit",
 "speed": 5.0
@@ -35,8 +29,6 @@ extents = Vector2( 40, 10 )
 [node name="PianoKey" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
 
@@ -44,3 +36,5 @@ frames = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite/Area2D"]
 shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

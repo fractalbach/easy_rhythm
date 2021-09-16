@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/piano_blue.png-6421006a3a0dd5baaa0c0ce4efba705b.stex"
+path="res://.import/piano_empty_bar.png-4ba217ceb010c87983036fcb707e7839.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://PianoKey/piano_blue.png"
-dest_files=[ "res://.import/piano_blue.png-6421006a3a0dd5baaa0c0ce4efba705b.stex" ]
+source_file="res://PianoKey/piano_empty_bar.png"
+dest_files=[ "res://.import/piano_empty_bar.png-4ba217ceb010c87983036fcb707e7839.stex" ]
 
 [params]
 
